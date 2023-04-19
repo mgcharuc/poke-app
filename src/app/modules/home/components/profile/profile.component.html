@@ -1,0 +1,150 @@
+<div class="container">
+    <div class="loading" *ngIf="loading">
+        <img src="../../../../../assets/images/loading.gif" />
+    </div>
+    <div *ngIf="!loading">
+        <!-- <h1 class="title">¡Hola! Configuremos tu perfil</h1> -->
+        <div class="wrapper-title">
+            <h2 class="title">
+                < ¡Hola! Configuremos tu perfil </h2>
+                    <span class="subtitle">Queremos conocerte mejor.</span>
+        </div>
+
+        <form [formGroup]="formData">
+            <div class="wrapper-info">
+                <div class="col-image">
+                    <div class="bg-image">
+                        <span>{{perfil.nombre !== '' ? perfil.nombre : 'Imagen perfil'}}</span>
+                        <div class="wrapper-avatar">
+                            <span class="icon-avatar" *ngIf="!previewImage">
+                                <mat-icon>person_outline</mat-icon>
+                            </span>
+                            <img *ngIf="previewImage" class="image-avatar" [src]="previewImage" alt="Imagen" />
+                        </div>
+                        <div class="wrapper-upload" *ngIf="!savePerfilFake">
+                            <label class="file-upload">
+                                {{ fileSelected ? fileSelected?.name : 'Adjunta una foto'
+                                }}
+                                <input class="input-file" type="file" accept="image/png,image/jpeg"
+                                    (change)="handleFileInput($event)" />
+                            </label>
+                            <mat-icon class="button-upload" [ngClass]="{'color-red': previewImage}"
+                                (click)="previewImage ? removeFile() : uploadFile()">{{
+                                !previewImage ? 'cloud_upload' :
+                                'restore_from_trash' }}</mat-icon>
+                            <span class="info-upload">{{errorUpload}}</span>
+                        </div>
+                        <div class="wrapper-perfil" *ngIf="savePerfilFake">
+                            <mat-grid-list cols="2" rowHeight="36px">
+                                <mat-grid-tile class="text-bold">Pasatiempo:</mat-grid-tile>
+                                <mat-grid-tile class="text-right">{{perfil.pasatiempo}}</mat-grid-tile>
+                                <mat-grid-tile class="text-bold">Edad:</mat-grid-tile>
+                                <mat-grid-tile class="text-right">{{perfil.edad}} años</mat-grid-tile>
+                                <div *ngIf="perfil.edad>=18">
+                                    <mat-grid-tile class="text-bold">DUI:</mat-grid-tile>
+                                    <mat-grid-tile class="text-right">{{perfil.documento}}</mat-grid-tile>
+                                </div>
+                            </mat-grid-list>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-form">
+                    <div class="form-content" *ngIf="!savePerfilFake">
+                        <div class="wrapper-form">
+                            <div class="header-form">
+                                <span class="title">
+                                    Tu información </span>
+                                <span class="subtitle">Completa la siguiente información para completar tu perfil</span>
+                            </div>
+                            <div class="fields-form">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Nombre</mat-label>
+                                    <input required matInput placeholder="Nombre" formControlName="nombre">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Pasatiempo favorito</mat-label>
+                                    <mat-chip-list #chipList aria-label="Pasatiempo selection">
+                                        <mat-chip *ngFor="let item of pasatiempos" (removed)="remove(item)">
+                                            {{item}}
+                                            <button matChipRemove>
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>
+                                        </mat-chip>
+
+                                        <input #pasatiempoInput formControlName="pasatiempo"
+                                            [matChipInputFor]="chipList" [matAutocomplete]="auto"
+                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                            (matChipInputTokenEnd)="add($event)" />
+                                    </mat-chip-list>
+                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                                        <mat-option *ngFor="let item of filteredPasatiempos | async" [value]="item">
+                                            {{item}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Cumpleaños</mat-label>
+                                    <input required matInput [matDatepicker]="picker" formControlName="cumpleanios"
+                                        (dateInput)="dateEvent('input', $event)"
+                                        (dateChange)="dateEvent('change', $event)">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Documento</mat-label>
+                                    <input required matInput placeholder="Doc Identidad" formControlName="documento"
+                                        mask="00000000-0">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <button class="button-form" mat-raised-button [disabled]="(!formData.valid)"
+                            (click)="enviar()">Continuar</button>
+                    </div>
+                    <div class="pokemon-content" *ngIf="savePerfilFake">
+                        <div class="wrapper-grid">
+                            <div class="header-grid">
+                                <span class="title">
+                                    Pokémon </span>
+                                <span class="subtitle">Selecciona 3 Pokémon para que sean parte de tu equipo</span>
+                            </div>
+                            <mat-form-field appearance="fill">
+                                <mat-label></mat-label>
+                                <input matInput placeholder="Buscar por índice, nombre..." />
+                                <mat-icon matPrefix>search</mat-icon>
+                            </mat-form-field>
+                            <div class="pokemon-grid">
+                                <cdk-virtual-scroll-viewport itemSize="50" style="height: 400px;">
+                                    <mat-grid-list cols="3" rowHeight="138px">
+
+                                        <mat-grid-tile *cdkVirtualFor="let pokemon of pokemonList">
+                                            <mat-card class="card">
+                                                <mat-card-content>
+                                                    <mat-card-title> {{pokemon.name}}</mat-card-title>
+                                                    <mat-card-subtitle> {{pokemon}} </mat-card-subtitle>
+                                                </mat-card-content>
+                                            </mat-card>
+                                        </mat-grid-tile>
+                                    </mat-grid-list>
+                                </cdk-virtual-scroll-viewport>
+
+                                <!-- <mat-grid-list cols="3" rowHeight="138px">
+                                    <mat-grid-tile *ngFor="let pokemon of pokemonList"><span>{{ pokemon.name
+                                            }}</span>
+                                        <img [src]="pokemon.sprites?.front_default" alt="{{ pokemon.name }} image">
+                                        <h3>Abilities</h3>
+                                        <ul>
+                                            <li *ngFor="let ability of pokemon?.abilities">{{ ability.ability.name }}
+                                            </li>
+                                        </ul>
+                                    </mat-grid-tile>
+                                </mat-grid-list> -->
+                            </div>
+                        </div>
+                        <button class="button-form" mat-raised-button [disabled]="(!formData.valid)"
+                            (click)="enviar()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

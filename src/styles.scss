@@ -1,1 +1,120 @@
-/* You can add global styles to this file, and also import other style files */
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$poke-app-primary: mat.define-palette(mat.$indigo-palette);
+$poke-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$poke-app-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$poke-app-theme: mat.define-light-theme((color: (primary: $poke-app-primary,
+                accent: $poke-app-accent,
+                warn: $poke-app-warn,
+            )));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($poke-app-theme);
+
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --primary-color: #01426A;
+    --secondary-color: #2C85BC;
+    --white-color: #FFFFFF;
+    --gray-color: #868686;
+    --gray-2-color: #9BB8D3;
+    --gray-3-color: #E6E6E6;
+    --shadow-color: #E7EFF5;
+    --green-color: #00693C;
+    --red-color: #DC143C;
+    --text-color: #454545;
+}
+
+body {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.loading {
+    //display: block;
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.container {
+    position: relative;
+    top: 75px;
+    background: var(--white-color);
+    // border: 1px solid;
+    color: var(--primary-color);
+    font-family: 'Poppins';
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.color-red {
+    color: var(--red-color) !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: var(--gray-color);
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: var(--primary-color) !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-thick,
+.mat-form-field-appearance-outline.mat-form-field-can-float,
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-label .mat-form-field-required-marker,
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-label,
+.mat-form-field-appearance-outline.mat-form-field-can-float .mat-form-field-label:not(.mat-form-field-empty) {
+    color: var(--primary-color) !important;
+}
+
+.mat-form-field-appearance-outline.mat-form-field-can-float .mat-form-field-label:not(.mat-form-field-empty) {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.mat-grid-tile-content {
+    color: var(--white-color);
+    text-align: left !important;
+    justify-content: left !important;
+    font-size: 20px;
+    line-height: 36px;
+}
+
+.text-right {
+    text-align: right !important;
+
+    .mat-grid-tile-content {
+        justify-content: right !important;
+    }
+}

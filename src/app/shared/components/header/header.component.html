@@ -1,0 +1,20 @@
+<div class="header">
+    <a href="#default" class="logo"><img src="assets/images/logo.svg" alt="logo" /></a>
+    <div class="navbar" *ngIf="name !==''">
+        <!-- <a class="menu-item" href="#">...</a> -->
+        <div class="menu-dropdown">
+            <div class="dropdown-wrapper">
+                <button class="dropdown-header"> {{name}}
+                    <mat-icon class="icon">expand_more</mat-icon>
+                </button>
+                <!-- <div class="dropdown-content">
+                        <a href="#">Link 1</a>
+                        <a href="#">Link 2</a>
+                    </div> -->
+            </div>
+        </div>
+        <a class="menu-icon" href="#">
+            <mat-icon class="icon">search</mat-icon>
+        </a>
+    </div>
+</div>
